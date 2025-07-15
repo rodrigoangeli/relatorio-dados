@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/relatorio-dados/static/js/main.74536f35.js",
+    "main.js": "/relatorio-dados/static/js/main.51d245c4.js",
     "index.html": "/relatorio-dados/index.html",
-    "main.74536f35.js.map": "/relatorio-dados/static/js/main.74536f35.js.map"
+    "main.51d245c4.js.map": "/relatorio-dados/static/js/main.51d245c4.js.map"
   },
   "entrypoints": [
-    "static/js/main.74536f35.js"
+    "static/js/main.51d245c4.js"
   ]
 }
