@@ -1,5 +1,5 @@
 import axios from "axios";
 const api = axios.create({
-  baseURL: "https://relatorio-dados-backend.vercel.app/api",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 export default api;
