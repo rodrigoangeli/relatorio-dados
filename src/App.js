@@ -18,10 +18,7 @@ const initialCompare = {
 
 export default function App() {
   return (
-    <DashboardProvider
-      initialFilters={initialFilters}
-      initialCompare={initialCompare}
-    >
+    <DashboardProvider>
       <div className="p-4">
         <h1>Dashboard</h1>
         <Header />
