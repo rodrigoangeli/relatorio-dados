@@ -1,0 +1,12 @@
+// vendors/_bootstrap-custom.scss
+
+// Sobrescreva variáveis ANTES de carregar o core do Bootstrap:
+@use "bootstrap" with (
+  $primary: #ff5733,
+  $font-family-base: "Roboto, sans-serif",
+  $enable-rounded: false // … outros overrides que quiser
+);
+
+// Note que NÃO precisamos importar funções, assertions ou
+// qualquer outro arquivo interno — o próprio módulo "bootstrap"
+// faz isso na ordem correta.

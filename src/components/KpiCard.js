@@ -1,10 +1,13 @@
 import React from "react";
 
-export default function KpiCard({ title, value }) {
+export default function KpiCard({ title, value, comparison }) {
   return (
-    <div className="bg-white rounded-2xl shadow p-4">
-      <p className="text-sm text-gray-600">{title}</p>
-      <p className="text-2xl font-semibold">{value}</p>
+    <div className="col">
+      <div className="grid-item">
+        {title}
+        {value}
+        {comparison}
+      </div>
     </div>
   );
 }
