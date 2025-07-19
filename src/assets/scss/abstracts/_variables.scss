@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 // sass/abstracts/_variables.scss
 
 // 1. Color Palette
@@ -20,7 +21,7 @@ $gray-800: #343a40;
 $gray-900: #212529;
 
 // 2. Typography
-$font-family-sans: "Helvetica Neue", Arial, sans-serif;
+$font-family-sans: "Nunito", sans-serif;
 $font-family-serif: Georgia, "Times New Roman", serif;
 $font-family-mono: Menlo, Monaco, monospace;
 
@@ -51,7 +52,7 @@ $spacing: (
   // 16px
   4: 1.5rem,
   // 24px
-  5: 3rem // 48px,,,,,,,,,,
+  5: 3rem // 48px,,,,,,,,,,,,
 );
 
 // 4. Breakpoints (mobile‑first)

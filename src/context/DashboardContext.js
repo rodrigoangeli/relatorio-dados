@@ -18,6 +18,7 @@ export function useDashboard() {
 }
 
 export function DashboardProvider({
+  isDisabled,
   initialFilters,
   initialCompare,
   children,
@@ -28,42 +29,61 @@ export function DashboardProvider({
   const [data, setData] = useState({
     vendas: null,
     analytics: null,
+    leads: null,
+    metaAds: null,
     vendasCompare: null,
     analyticsCompare: null,
+    leadsCompare: null,
+    metaAdsCompare: null,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchAll = useCallback(async () => {
-    console.log(primaryFilters);
-    if (primaryFilters) {
-      setLoading(true);
-      setError(null);
-      try {
-        const [vendasRes, analyticsRes, vendasCmpRes, analyticsCmpRes] =
-          await Promise.all([
-            api.get("/report/vendas", { params: primaryFilters }),
-            api.get("/report/analytics", { params: primaryFilters }),
-            api.get("/report/vendas", { params: compareFilters }),
-            api.get("/report/analytics", { params: compareFilters }),
-          ]);
-        setData({
-          vendas: vendasRes.data,
-          analytics: analyticsRes.data,
-          vendasCompare: vendasCmpRes.data,
-          analyticsCompare: analyticsCmpRes.data,
-        });
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
+    setLoading(true);
+    setError(null);
+    try {
+      const [
+        vendasRes,
+        analyticsRes,
+        leadsRes,
+        metaAdsRes,
+        vendasCmpRes,
+        analyticsCmpRes,
+        leadsCmpRes,
+        metaAdsCmpRes,
+      ] = await Promise.all([
+        api.get("/report/vendas", { params: primaryFilters }),
+        api.get("/report/analytics", { params: primaryFilters }),
+        api.get("/report/leads", { params: primaryFilters }),
+        api.get("/report/meta-ads", { params: primaryFilters }),
+        api.get("/report/vendas", { params: compareFilters }),
+        api.get("/report/analytics", { params: compareFilters }),
+        api.get("/report/leads", { params: compareFilters }),
+        api.get("/report/meta-ads", { params: compareFilters }),
+      ]);
+      setData({
+        vendas: vendasRes.data,
+        analytics: analyticsRes.data,
+        leads: leadsRes.data,
+        metaAds: metaAdsRes.data,
+        vendasCompare: vendasCmpRes.data,
+        analyticsCompare: analyticsCmpRes.data,
+        leadsCompare: leadsCmpRes.data,
+        metaAdsCompare: metaAdsCmpRes.data,
+      });
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   }, [primaryFilters, compareFilters]);
 
   // fetch on filters change
   useEffect(() => {
-    fetchAll();
+    if (!isDisabled) {
+      fetchAll();
+    }
   }, [fetchAll]);
 
   return (

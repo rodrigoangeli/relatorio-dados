@@ -3,9 +3,8 @@ import KpiCard from "../../components/KpiCard";
 
 function MetaAds() {
   return (
-    <div className="container py-4">
-      <h4>Meta Ads</h4>
-      <Section md={4} gutter={2} className="mb-2">
+    <>
+      <Section md={4} gutter={2} title="Meta Ads">
         <KpiCard title="Valor investido" />
         <KpiCard title="Impressões Totais" />
         <KpiCard title="Alcance Total" />
@@ -20,7 +19,7 @@ function MetaAds() {
         <KpiCard title="Todos os cadastros (leads)" />
         <KpiCard title="Custo por Todos os cadastros (leads)" />
       </Section>
-    </div>
+    </>
   );
 }
 

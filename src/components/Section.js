@@ -13,6 +13,9 @@ const Section = React.memo(
     gutter = 2,
     className,
     children,
+    icon,
+    title,
+    subtitle,
     ...rest
   }) => {
     const classes = classNames(
@@ -30,8 +33,18 @@ const Section = React.memo(
     );
 
     return (
-      <div className={classes} {...rest}>
-        {children}
+      <div className="container my-2">
+        <div className={`d-flex ${title && "mt-5"}`}>
+          {icon && <img src="" />}
+          <div>
+            {title && <h4>{title}</h4>}
+            {subtitle && <p>{subtitle}</p>}
+          </div>
+        </div>
+
+        <div className={classes} {...rest}>
+          {children}
+        </div>
       </div>
     );
   }

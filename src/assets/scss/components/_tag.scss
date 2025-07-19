@@ -1,0 +1,38 @@
+.tag {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  height: 1.25rem;
+  align-items: center;
+  display: flex;
+  border-radius: 1.25rem;
+  background-color: #ecf0f1;
+  color: #455a64;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+
+  svg {
+    height: 14px;
+    width: 14px;
+    margin-right: 2px;
+    fill: #455a64;
+  }
+
+  &.good {
+    background-color: #dff7e6;
+    color: #0a9b38;
+
+    svg {
+      fill: #0a9b38;
+    }
+  }
+  &.bad {
+    background-color: #f9e6e6;
+    color: #ca2c2c;
+
+    svg {
+      fill: #ca2c2c;
+      transform: rotate(180deg);
+    }
+  }
+}
