@@ -33,7 +33,7 @@ const Section = React.memo(
     );
 
     return (
-      <div className="container my-2">
+      <div className="container-xxl my-2">
         <div className={`d-flex ${title && "mt-5"}`}>
           {icon && <img src="" />}
           <div>

@@ -1,19 +1,21 @@
 export function formatPercent(value, decimals = 2) {
   return (
-    value.toLocaleString("pt-BR", {
+    (value?.toLocaleString("pt-BR", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-    }) + "%"
+    }) || 0) + "%"
   );
 }
 
 export function formatCurrencyBRL(value, decimals = 2) {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+  return (
+    value?.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }) || 0
+  );
 }
 
 export function numFmt(value) {
@@ -23,6 +25,9 @@ export function numFmt(value) {
   }).format(value);
 }
 
+export function formatDate(date) {
+  return date.toISOString().split("T")[0];
+}
 /* 
 // Uso:
 const diffPercent = (1520.8 / 1501.62 - 1) * 100;
