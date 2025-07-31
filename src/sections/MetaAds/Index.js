@@ -3,7 +3,11 @@ import KpiCard from "../../components/KpiCard";
 import DataTable from "react-data-table-component";
 import Card from "../../components/Card";
 import { useMemo, useState } from "react";
-import { formatPercent, formatCurrencyBRL } from "../../helpers/formatter";
+import {
+  formatPercent,
+  formatCurrencyBRL,
+  numFmt,
+} from "../../helpers/formatter";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Form from "react-bootstrap/Form";
@@ -128,12 +132,12 @@ const columns = [
         </span>
       );
     },
-    width: "300px",
+    width: "250px",
   },
   {
     name: "Adset",
     selector: (row) => row.adsetNames,
-    width: "70px",
+    width: "65px",
     center: true,
     format: (row) => {
       return (
@@ -169,7 +173,7 @@ const columns = [
     name: "Cliques",
     selector: (row) => row.clicks,
     sortable: true,
-    width: "90px",
+    width: "60px",
     compact: true,
     center: true,
   },
@@ -192,7 +196,7 @@ const columns = [
       }
       return row.leads;
     },
-    width: "80px",
+    width: "60px",
     compact: true,
     center: true,
   },
@@ -209,7 +213,7 @@ const columns = [
     name: "Vendas",
     selector: (row) => row.sales,
     sortable: true,
-    width: "80px",
+    width: "60px",
     compact: true,
     center: true,
   },
@@ -226,6 +230,14 @@ const columns = [
     name: "Investimento",
     selector: (row) => row.spend,
     format: (row) => formatCurrencyBRL(row.spend),
+    sortable: true,
+    width: "120px",
+    compact: true,
+  },
+  {
+    name: "Receita",
+    selector: (row) => row.revenue,
+    format: (row) => formatCurrencyBRL(row.revenue),
     sortable: true,
     width: "120px",
     compact: true,
@@ -255,68 +267,89 @@ function MetaAds({ metaAdsData }) {
   const [campaignNameInput, setCampaignNameInput] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [courseOnlyCheckbox, setCourseOnlyCheckbox] = useState(true);
-  const { rows } = useMemo(() => {
-    const rowsRaw = metaAdsData
-      .map((account) => {
-        const rows = [];
-        account.campaigns.forEach((camp) => {
-          camp.adsets.forEach((aset) => {
-            if (aset.metaLeadsCount) {
-              console.log("metaLeadsCount", aset.metaLeadsCount);
-            }
-            rows.push({
-              accountId: account.accountId,
-              id: aset.adsetIds.join(""),
-              campaignName: camp.campaignName,
-              adsetNames: aset.adsetNames,
-              impressions: parseInt(aset.impressions),
-              clicks: parseInt(aset.clicks),
-              ctr: parseFloat(aset.ctr),
-              leads: parseInt(aset.leads),
-              leadRate:
-                parseInt(aset.clicks) > 0
-                  ? (parseInt(aset.leads) / parseInt(aset.clicks)) * 100
-                  : 0,
-              sales: parseInt(aset.sales),
-              saleRate:
-                parseInt(aset.leads) > 0
-                  ? (parseInt(aset.sales) / parseInt(aset.leads)) * 100
-                  : 0,
-              spend: parseInt(aset.spend),
-              costPerSale:
-                parseInt(aset.sales) > 0
-                  ? parseInt(aset.spend) / parseInt(aset.sales)
-                  : parseInt(aset.spend),
-              utms: {
-                utm_medium: aset.utm_medium,
-                utm_campaign: aset.utm_campaign,
-                utm_content: aset.utm_content,
-              },
-              ...aset,
+  const { rows, totalLeads, totalSales, totalRevenue, totalSpent } =
+    useMemo(() => {
+      const rowsRaw = metaAdsData
+        .map((account) => {
+          const rows = [];
+          account.campaigns.forEach((camp) => {
+            camp.adsets.forEach((aset) => {
+              rows.push({
+                accountId: account.accountId,
+                id: aset.adsetIds.join(""),
+                campaignName: camp.campaignName,
+                adsetNames: aset.adsetNames,
+                impressions: parseInt(aset.impressions),
+                clicks: parseInt(aset.clicks),
+                ctr: parseFloat(aset.ctr),
+                leads: parseInt(aset.leads),
+                revenue: parseInt(aset.revenue),
+                leadRate:
+                  parseInt(aset.clicks) > 0
+                    ? (parseInt(aset.leads) / parseInt(aset.clicks)) * 100
+                    : 0,
+                sales: parseInt(aset.sales),
+                saleRate:
+                  parseInt(aset.leads) > 0
+                    ? (parseInt(aset.sales) / parseInt(aset.leads)) * 100
+                    : 0,
+                spend: parseInt(aset.spend),
+                costPerSale:
+                  parseInt(aset.sales) > 0
+                    ? parseInt(aset.spend) / parseInt(aset.sales)
+                    : parseInt(aset.spend),
+                utms: {
+                  utm_medium: aset.utm_medium,
+                  utm_campaign: aset.utm_campaign,
+                  utm_content: aset.utm_content,
+                },
+                ...aset,
+              });
             });
           });
-        });
-        return rows;
-      })
-      .flat();
-    console.log(rowsRaw);
-    const filteredRows = rowsRaw.filter((e) => {
-      const matchName =
-        campaignNameInput === "" ||
-        e.campaignName.toLowerCase().includes(campaignNameInput.toLowerCase());
+          return rows;
+        })
+        .flat();
+      const filteredRows = rowsRaw.filter((e) => {
+        const matchName =
+          campaignNameInput === "" ||
+          e.campaignName
+            .toLowerCase()
+            .includes(campaignNameInput.toLowerCase());
 
-      const matchCourse = !courseOnlyCheckbox || e.isCourse;
+        const matchCourse = !courseOnlyCheckbox || e.isCourse;
 
-      const matchAccount =
-        selectedAccount === "" || e.accountId === selectedAccount;
+        const matchAccount =
+          selectedAccount === "" || e.accountId === selectedAccount;
 
-      return matchName && matchCourse && matchAccount;
-    });
+        return matchName && matchCourse && matchAccount;
+      });
 
-    return {
-      rows: filteredRows,
-    };
-  }, [metaAdsData, campaignNameInput, courseOnlyCheckbox, selectedAccount]);
+      const totalLeads = filteredRows.reduce(
+        (sum, a) => sum + Number(a.leads || 0),
+        0
+      );
+      const totalSales = filteredRows.reduce(
+        (sum, a) => sum + Number(a.sales || 0),
+        0
+      );
+      const totalSpent = filteredRows.reduce(
+        (sum, a) => sum + Number(a.spend || 0),
+        0
+      );
+      const totalRevenue = filteredRows.reduce(
+        (sum, a) => sum + Number(a.revenue || 0),
+        0
+      );
+
+      return {
+        rows: filteredRows,
+        totalLeads,
+        totalSales,
+        totalSpent,
+        totalRevenue,
+      };
+    }, [metaAdsData, campaignNameInput, courseOnlyCheckbox, selectedAccount]);
   return (
     <>
       <Section md={1} gutter={2} title="Meta Ads">
@@ -361,15 +394,14 @@ function MetaAds({ metaAdsData }) {
           />
         </Card>
       </Section>
-      <Section md={4} gutter={2}>
-        <KpiCard title="Valor investido" />
-        <KpiCard title="Impressões Totais" />
-        <KpiCard title="Alcance Total" />
-        <KpiCard title="Total de cliques no link" />
-        <KpiCard title="CTR" />
-        <KpiCard title="CPC médio" />
-        <KpiCard title="CPM médio" />
-        <KpiCard title="Frequência" />
+      <Section md={2} gutter={2}>
+        <KpiCard title="Leads Totais" value={numFmt(totalLeads)} />
+        <KpiCard title="Vendas Totais" value={numFmt(totalSales)} />
+        <KpiCard
+          title="Valor investido"
+          value={formatCurrencyBRL(totalSpent)}
+        />
+        <KpiCard title="Receita" value={formatCurrencyBRL(totalRevenue)} />
       </Section>
     </>
   );

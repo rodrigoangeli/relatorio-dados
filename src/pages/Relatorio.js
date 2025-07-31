@@ -49,7 +49,10 @@ export default function Relatorio() {
     setIsLoading(true);
     api
       .get("/report", { params: filters })
-      .then(({ data }) => setFetchedData(data))
+      .then(({ data }) => {
+        console.log(data);
+        setFetchedData(data);
+      })
       .catch((err) => setError(err))
       .finally(() => setIsLoading(false));
   }, [filters]);
