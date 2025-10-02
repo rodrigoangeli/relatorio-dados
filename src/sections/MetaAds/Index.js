@@ -105,6 +105,10 @@ const accMap = {
     name: "RJ Presencial",
     color: "#ac320c",
   },
+  act_1060944085345428: {
+    name: "VERBO JURIDICO - ADILSON",
+    color: "#fc9300",
+  },
 };
 
 const columns = [

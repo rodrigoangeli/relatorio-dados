@@ -14,6 +14,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 registerLocale("pt-BR", ptBR);
 
+function getUrlParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(today.getDate() - 1);
@@ -28,10 +33,31 @@ const compareInicio = new Date(yesterday);
 compareInicio.setMonth(compareInicio.getMonth() - 1);
 
 export default function Relatorio() {
-  const [start1, setStart1] = useState(formatDate(dataFim));
-  const [end1, setEnd1] = useState(formatDate(yesterday));
-  const [start2, setStart2] = useState(formatDate(compareFim));
-  const [end2, setEnd2] = useState(formatDate(compareInicio));
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const dataFim = new Date(yesterday);
+  dataFim.setDate(yesterday.getDate() - 30);
+
+  const compareFim = new Date(dataFim);
+  compareFim.setMonth(compareFim.getMonth() - 1);
+
+  const compareInicio = new Date(yesterday);
+  compareInicio.setMonth(compareInicio.getMonth() - 1);
+
+  // get url params (if they exist)
+  const urlStart = getUrlParam("start");
+  const urlEnd = getUrlParam("end");
+  const urlStartCompare = getUrlParam("startCompare");
+  const urlEndCompare = getUrlParam("endCompare");
+
+  const [start1, setStart1] = useState(urlStart || formatDate(dataFim));
+  const [end1, setEnd1] = useState(urlEnd || formatDate(yesterday));
+  const [start2, setStart2] = useState(
+    urlStartCompare || formatDate(compareFim)
+  );
+  const [end2, setEnd2] = useState(urlEndCompare || formatDate(compareInicio));
 
   const [filters, setFilters] = useState({
     ...defaultFilters,
