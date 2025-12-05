@@ -109,6 +109,10 @@ const accMap = {
     name: "VERBO JURIDICO - ADILSON",
     color: "#fc9300",
   },
+  act_1100598840320716: {
+    name: "POS25",
+    color: "#fc00bdff",
+  },
 };
 
 const columns = [
@@ -132,7 +136,7 @@ const columns = [
           style={{ color: accMap[row.accountId].color, fontWeight: 700 }}
           title={original}
         >
-          {formatado}
+          {original}
         </span>
       );
     },

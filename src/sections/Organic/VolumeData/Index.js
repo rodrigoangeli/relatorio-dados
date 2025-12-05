@@ -1,12 +1,13 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Section from "../../../components/Section";
 import KpiCard from "../../../components/KpiCard";
 import DataTable from "react-data-table-component";
 import Card from "../../../components/Card";
 import { getCourseName } from "../../../helpers/cleaner";
 import { formatPercent } from "../../../helpers/formatter";
+import Form from "react-bootstrap/Form";
 
-const columns = [
+const allColumns = [
   {
     name: "Curso",
     grow: 4,
@@ -30,6 +31,7 @@ const columns = [
     sortable: true,
     compact: true,
     maxWidth: "80px",
+    compareCol: true, // 👈 marcamos as colunas de comparação
   },
   {
     name: "Δ Visitas",
@@ -38,6 +40,7 @@ const columns = [
     compact: true,
     format: (row) => formatPercent(row.delta.visits),
     maxWidth: "80px",
+    compareCol: true,
   },
   {
     name: "Leads",
@@ -52,6 +55,7 @@ const columns = [
     sortable: true,
     compact: true,
     maxWidth: "80px",
+    compareCol: true,
   },
   {
     name: "Δ Leads",
@@ -60,6 +64,7 @@ const columns = [
     compact: true,
     format: (row) => formatPercent(row.delta.leads),
     maxWidth: "80px",
+    compareCol: true,
   },
   {
     name: "Vendas ",
@@ -74,6 +79,7 @@ const columns = [
     sortable: true,
     compact: true,
     maxWidth: "80px",
+    compareCol: true,
   },
   {
     name: "Δ Vendas",
@@ -82,20 +88,37 @@ const columns = [
     compact: true,
     format: (row) => formatPercent(row.delta.sales),
     maxWidth: "80px",
+    compareCol: true,
   },
 ];
 
 function VolumeData({ volumeData }) {
+  const [courseNameInput, setCourseNameInput] = useState("");
+  const [currentOnlyCheckbox, setCurrentOnlyCheckbox] = useState(false);
+
+  const columns = useMemo(() => {
+    if (currentOnlyCheckbox) {
+      // mantém apenas as colunas sem flag compareCol
+      return allColumns.filter((col) => !col.compareCol);
+    }
+    return allColumns;
+  }, [currentOnlyCheckbox]);
+
   const { rows } = useMemo(() => {
     const rowsRaw = volumeData.map((e, i) => ({
       ...e,
       id: i + 1,
     }));
 
-    return {
-      rows: rowsRaw,
-    };
-  }, [volumeData]);
+    const filteredRows = rowsRaw.filter((e) => {
+      const matchName =
+        courseNameInput === "" ||
+        e.title.toLowerCase().includes(courseNameInput.toLowerCase());
+      return matchName;
+    });
+
+    return { rows: filteredRows };
+  }, [volumeData, courseNameInput]);
 
   return (
     <>
@@ -105,6 +128,26 @@ function VolumeData({ volumeData }) {
             title="Tabela de Volumes"
             columns={columns}
             data={rows}
+            subHeader
+            subHeaderAlign="left"
+            subHeaderComponent={
+              <div className="d-flex gap-4 align-items-center">
+                <Form.Control
+                  id="search"
+                  type="text"
+                  placeholder="Nome do Curso"
+                  value={courseNameInput}
+                  onChange={(e) => setCourseNameInput(e.target.value)}
+                />
+                <Form.Check
+                  type={"checkbox"}
+                  id={`default`}
+                  label="Atual"
+                  checked={currentOnlyCheckbox}
+                  onChange={() => setCurrentOnlyCheckbox(!currentOnlyCheckbox)}
+                />
+              </div>
+            }
             pagination
             striped
           />

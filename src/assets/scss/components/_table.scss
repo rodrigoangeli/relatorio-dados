@@ -1,11 +1,15 @@
 div[role="row"] {
   min-height: 38px;
 }
+div[data-column-id="1"] > div {
+  white-space: break-spaces !important;
+}
 div[role="columnheader"] {
   font-weight: 700;
 }
 .utms {
   padding: 5px 0;
+  white-space: nowrap;
   span {
     display: block;
   }
