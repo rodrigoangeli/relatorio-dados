@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Resume from "../sections/Resume/Index";
 import MetaAds from "../sections/MetaAds/Index";
 import Organic from "../sections/Organic/Index";
+import Other from "../sections/Other/Index";
 import api from "../services/api";
 import defaultFilters from "../configs/defaultFilters";
 
@@ -193,6 +194,7 @@ export default function Relatorio() {
         <Resume {...fetchedData.resumeData} />
         <Organic {...fetchedData.organicData} />
         <MetaAds metaAdsData={fetchedData?.metaAdsData} />
+        <Other otherData={fetchedData?.otherData} />
       </div>
     </>
   );

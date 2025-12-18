@@ -259,6 +259,18 @@ const columns = [
     compact: true,
   },
   {
+    name: "Dup",
+    selector: (row) => row.hasDuplicateUTM,
+    width: "65px",
+    center: true,
+    format: (row) => {
+      if (row.hasDuplicateUTM) {
+        return `✔`;
+      }
+      return `—`;
+    },
+  },
+  {
     name: "utms",
     selector: (row) => row.utms,
     sortable: true,
@@ -283,6 +295,7 @@ function MetaAds({ metaAdsData }) {
           account.campaigns.forEach((camp) => {
             camp.adsets.forEach((aset) => {
               rows.push({
+                hasDuplicateUTM: aset.hasDuplicateUTM,
                 accountId: account.accountId,
                 id: aset.adsetIds.join(""),
                 campaignName: camp.campaignName,
